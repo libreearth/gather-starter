@@ -1,0 +1,12 @@
+image:
+  file: gitpod/.gitpod.dockerfile
+ports:
+  - port: 4000
+    onOpen: open-preview 
+tasks:
+  - name: Phx
+    init: gitpod/init.sh
+vscode:
+  extensions:
+    - elixir-lsp.elixir-ls@0.6.5:QUDuFQqLMdKbA78hQ1SaeQ==
+
