@@ -2,7 +2,7 @@
 
 An optimized **Gather** development environment based on **Phoenix Web Framework** which helps you to provision your Phoenix project as a **Gitpod** workspace in the cloud.
 
-The  setup takes care about the installation of Erlang/Elxiir, Postgres and all the stuff you need to have some fun with Phoneix. The process is literally effortless and in 5 minutes you can start to code Elixir in your browser!  
+The  setup takes care about the installation of Erlang/Elxiir, Postgres and all the stuff you need to have some fun with Phoenix. The process is literally effortless and in 5 minutes you can start to code Elixir in your browser!  
 
 ### How-to:
 
