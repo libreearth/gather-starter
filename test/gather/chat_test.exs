@@ -3,21 +3,14 @@ defmodule Gather.ChatTest do
 
   alias Gather.Chat
 
+  import Gather.{AccountsFixtures, ChatFixtures}
+
   describe "conversations" do
     alias Gather.Chat.Conversation
 
     @valid_attrs %{title: "some title"}
     @update_attrs %{title: "some updated title"}
     @invalid_attrs %{title: nil}
-
-    def conversation_fixture(attrs \\ %{}) do
-      {:ok, conversation} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Chat.create_conversation()
-
-      conversation
-    end
 
     test "list_conversations/0 returns all conversations" do
       conversation = conversation_fixture()
@@ -62,6 +55,60 @@ defmodule Gather.ChatTest do
     test "change_conversation/1 returns a conversation changeset" do
       conversation = conversation_fixture()
       assert %Ecto.Changeset{} = Chat.change_conversation(conversation)
+    end
+  end
+
+  describe "messages" do
+    alias Gather.Chat.Message
+
+    @valid_attrs %{content: "some content"}
+    @update_attrs %{content: "some updated content"}
+    @invalid_attrs %{content: nil}
+
+    test "list_messages/0 returns all messages" do
+      %{id: id, conversation: conversation} = message_fixture()
+      assert [%Message{id: ^id}] = Chat.list_messages(conversation)
+    end
+
+    test "get_message!/1 returns the message with given id" do
+      %{id: id, content: content} = message_fixture()
+      assert %{id: ^id, content: ^content} = Chat.get_message!(id)
+    end
+
+    test "create_message/1 with valid data creates a message" do
+      user = user_fixture()
+      conversation = conversation_fixture()
+      assert {:ok, %Message{} = message} = Chat.create_message(user, conversation, @valid_attrs)
+      assert message.content == "some content"
+    end
+
+    test "create_message/1 with invalid data returns error changeset" do
+      user = user_fixture()
+      conversation = conversation_fixture()
+      assert {:error, %Ecto.Changeset{}} = Chat.create_message(user, conversation, @invalid_attrs)
+    end
+
+    test "update_message/2 with valid data updates the message" do
+      message = message_fixture()
+      assert {:ok, %Message{} = message} = Chat.update_message(message, @update_attrs)
+      assert message.content == "some updated content"
+    end
+
+    test "update_message/2 with invalid data returns error changeset" do
+      %{id: id, content: content} = message = message_fixture()
+      assert {:error, %Ecto.Changeset{}} = Chat.update_message(message, @invalid_attrs)
+      assert %Message{id: ^id, content: ^content} = Chat.get_message!(id)
+    end
+
+    test "delete_message/1 deletes the message" do
+      message = message_fixture()
+      assert {:ok, %Message{}} = Chat.delete_message(message)
+      assert_raise Ecto.NoResultsError, fn -> Chat.get_message!(message.id) end
+    end
+
+    test "change_message/1 returns a message changeset" do
+      message = message_fixture()
+      assert %Ecto.Changeset{} = Chat.change_message(message)
     end
   end
 end
