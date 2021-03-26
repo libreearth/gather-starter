@@ -125,8 +125,7 @@ defmodule GatherWeb.ConversationLiveTest do
         |> log_in_user(user)
         |> live(Routes.conversation_show_path(conn, :show, conversation))
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Conversation"
+      assert show_live |> element("a.edit") |> render_click() =~ "Edit Conversation"
 
       assert_patch(show_live, Routes.conversation_show_path(conn, :edit, conversation))
 
