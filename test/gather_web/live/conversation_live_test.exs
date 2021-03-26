@@ -138,7 +138,10 @@ defmodule GatherWeb.ConversationLiveTest do
         show_live
         |> form("#conversation-form", conversation: @update_attrs)
         |> render_submit()
-        |> follow_redirect(log_in_user(conn, user), Routes.conversation_show_path(conn, :show, conversation))
+        |> follow_redirect(
+          log_in_user(conn, user),
+          Routes.conversation_show_path(conn, :show, conversation)
+        )
 
       assert html =~ "Conversation updated successfully"
       assert html =~ "some updated title"

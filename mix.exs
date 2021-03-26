@@ -1,5 +1,6 @@
 defmodule Gather.MixProject do
   use Mix.Project
+
   def project do
     [
       app: :gather,
@@ -12,6 +13,7 @@ defmodule Gather.MixProject do
       deps: deps()
     ]
   end
+
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
@@ -21,6 +23,7 @@ defmodule Gather.MixProject do
       extra_applications: [:logger, :runtime_tools]
     ]
   end
+
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
@@ -33,7 +36,6 @@ defmodule Gather.MixProject do
       {:bamboo, "~> 1.5"},
       {:premailex, "~> 0.3.0"},
       {:floki, ">= 0.0.0"},
-
       {:bcrypt_elixir, "~> 2.0"},
       {:phx_gen_auth, "~> 0.6", only: [:dev], runtime: false},
       # {:sobelow, "~> 0.8", only: :dev},
@@ -53,6 +55,7 @@ defmodule Gather.MixProject do
       {:plug_cowboy, "~> 2.0"}
     ]
   end
+
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to install project dependencies and perform other setup tasks, run:
   #

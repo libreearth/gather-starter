@@ -83,7 +83,7 @@ defmodule GatherWeb.Router do
     get "/users/confirm/:token", UserConfirmationController, :confirm
   end
 
-  if Mix.env == :dev do
+  if Mix.env() == :dev do
     forward "/sent_emails", Bamboo.SentEmailViewerPlug
   end
 end

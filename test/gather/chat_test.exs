@@ -40,7 +40,10 @@ defmodule Gather.ChatTest do
 
     test "update_conversation/2 with valid data updates the conversation" do
       conversation = conversation_fixture()
-      assert {:ok, %Conversation{} = conversation} = Chat.update_conversation(conversation, @update_attrs)
+
+      assert {:ok, %Conversation{} = conversation} =
+               Chat.update_conversation(conversation, @update_attrs)
+
       assert conversation.title == "some updated title"
     end
 

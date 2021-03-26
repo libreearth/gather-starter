@@ -21,5 +21,4 @@ config :gather, GatherWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-config :gather, Gather.Mailer,
-  adapter: Bamboo.TestAdapter
+config :gather, Gather.Mailer, adapter: Bamboo.TestAdapter
