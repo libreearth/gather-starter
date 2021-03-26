@@ -65,6 +65,13 @@ defmodule GatherWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
+    live "/conversations", ConversationLive.Index, :index
+    live "/conversations/new", ConversationLive.Index, :new
+    live "/conversations/:id/edit", ConversationLive.Index, :edit
+
+    live "/conversations/:id", ConversationLive.Show, :show
+    live "/conversations/:id/show/edit", ConversationLive.Show, :edit
   end
 
   scope "/", GatherWeb do

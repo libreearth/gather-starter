@@ -1,0 +1,32 @@
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, GatherWeb.ConversationLive.FormComponent,
+    id: @conversation.id,
+    title: @page_title,
+    action: @live_action,
+    conversation: @conversation,
+    return_to: Routes.conversation_show_path(@socket, :show, @conversation) %>
+<% end %>
+
+<div class="flex flex-wrap">
+  <div class="w-full md:w-2/3">
+    <div class="card shadow">
+      <div class="card-header">
+        <h5 class="card-title">
+          Show Conversation
+        </h5>
+      </div>
+      <div class="card-body prose">
+
+        <div>
+          <strong>Title:</strong>
+          <%= @conversation.title %>
+        </div>
+
+      </div>
+      <div class="card-footer">
+        <%= live_patch "Edit", to: Routes.conversation_show_path(@socket, :edit, @conversation), class: "btn btn-link btn-sm" %>
+        <%= live_redirect "Back", to: Routes.conversation_index_path(@socket, :index), class: "btn btn-link btn-sm" %>
+      </div>
+    </div>
+  </div>
+</div>
