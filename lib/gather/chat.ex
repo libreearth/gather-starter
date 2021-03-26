@@ -155,7 +155,20 @@ defmodule Gather.Chat do
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Ecto.Changeset.put_assoc(:conversation, conversation)
     |> Repo.insert()
+    |> broadcast_message()
   end
+
+  defp broadcast_message({:ok, new_message}) do
+    GatherWeb.Endpoint.broadcast!(
+      "conversation_#{new_message.conversation_id}",
+      "new_message",
+      new_message
+    )
+
+    {:ok, new_message}
+  end
+
+  defp broadcast_message(error), do: error
 
   @doc """
   Updates a message.
