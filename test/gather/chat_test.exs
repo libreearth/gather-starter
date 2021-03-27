@@ -66,8 +66,9 @@ defmodule Gather.ChatTest do
     @invalid_attrs %{content: nil}
 
     test "list_messages/0 returns all messages" do
-      %{id: id, conversation: conversation} = message_fixture()
-      assert [%Message{id: ^id}] = Chat.list_messages(conversation)
+      user = user_fixture(%{email: "joe@example.com"})
+      %{id: id, conversation: conversation} = message_fixture(%{user: user})
+      assert [%Message{id: ^id, author: "joe"}] = Chat.list_messages(conversation)
     end
 
     test "get_message!/1 returns the message with given id" do

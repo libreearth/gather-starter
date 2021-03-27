@@ -119,6 +119,14 @@ defmodule Gather.Chat do
     |> order_by(asc: :id)
     |> Repo.all()
     |> Repo.preload(:user)
+    |> with_author()
+  end
+
+  defp with_author(messages) do
+    Enum.map(messages, fn message ->
+      [author | _rest] = String.split(message.user.email, "@")
+      %Message{message | author: author}
+    end)
   end
 
   @doc """

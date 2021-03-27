@@ -6,6 +6,8 @@ defmodule Gather.Chat.Message do
 
   schema "messages" do
     field :content, :string
+    field :author, :string, virtual: true
+
     belongs_to :user, Accounts.User
     belongs_to :conversation, Chat.Conversation
 

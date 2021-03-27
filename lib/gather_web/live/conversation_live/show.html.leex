@@ -45,7 +45,7 @@
       <%= for message <- @messages do %>
         <div class="clear-both">
           <div class="bg-gray-200 w-3/4 mx-4 my-2 p-2 rounded-lg <%= if message.user_id == @current_user.id, do: "float-right bg-gray-600 text-white" %>">
-            <b><%= message.user.email %></b>: <%= message.content %>
+            <b><%= message.author %></b>: <%= message.content %>
           </div>
         </div>
       <% end %>
