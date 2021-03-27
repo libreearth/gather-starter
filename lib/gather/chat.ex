@@ -4,9 +4,10 @@ defmodule Gather.Chat do
   """
 
   import Ecto.Query, warn: false
-  alias Gather.Repo
 
-  alias Gather.Chat.Conversation
+  alias Gather.{Chat, Repo}
+  alias Chat.{Conversation, Message}
+  alias GatherWeb.Endpoint
 
   @doc """
   Returns the list of conversations.
@@ -18,7 +19,9 @@ defmodule Gather.Chat do
 
   """
   def list_conversations do
-    Repo.all(Conversation)
+    Conversation
+    |> order_by(desc: :id)
+    |> Repo.all()
   end
 
   @doc """
@@ -53,6 +56,7 @@ defmodule Gather.Chat do
     %Conversation{}
     |> Conversation.changeset(attrs)
     |> Repo.insert()
+    |> broadcast_conversation(:create)
   end
 
   @doc """
@@ -71,7 +75,21 @@ defmodule Gather.Chat do
     conversation
     |> Conversation.changeset(attrs)
     |> Repo.update()
+    |> broadcast_conversation(:update)
   end
+
+  defp broadcast_conversation({:ok, conversation}, action) do
+    topic = "conversations"
+    event = to_string(action)
+    Endpoint.broadcast!(topic, event, conversation)
+
+    topic = "conversation_#{conversation.id}"
+    Endpoint.broadcast!(topic, event, conversation)
+
+    {:ok, conversation}
+  end
+
+  defp broadcast_conversation(error, _action), do: error
 
   @doc """
   Deletes a conversation.
@@ -86,7 +104,9 @@ defmodule Gather.Chat do
 
   """
   def delete_conversation(%Conversation{} = conversation) do
-    Repo.delete(conversation)
+    conversation
+    |> Repo.delete()
+    |> broadcast_conversation(:delete)
   end
 
   @doc """
@@ -101,8 +121,6 @@ defmodule Gather.Chat do
   def change_conversation(%Conversation{} = conversation, attrs \\ %{}) do
     Conversation.changeset(conversation, attrs)
   end
-
-  alias Gather.Chat.Message
 
   @doc """
   Returns the list of messages.
@@ -122,12 +140,20 @@ defmodule Gather.Chat do
     |> with_author()
   end
 
-  defp with_author(messages) do
-    Enum.map(messages, fn message ->
-      [author | _rest] = String.split(message.user.email, "@")
-      %Message{message | author: author}
-    end)
+  defp with_author(messages) when is_list(messages) do
+    Enum.map(messages, &with_author/1)
   end
+
+  defp with_author(%Message{} = message) do
+    [author | _rest] = String.split(message.user.email, "@")
+    %Message{message | author: author}
+  end
+
+  defp with_author({:ok, message}) do
+    {:ok, with_author(message)}
+  end
+
+  defp with_author(error), do: error
 
   @doc """
   Gets a single message.
@@ -163,20 +189,18 @@ defmodule Gather.Chat do
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Ecto.Changeset.put_assoc(:conversation, conversation)
     |> Repo.insert()
-    |> broadcast_message()
+    |> with_author()
+    |> broadcast_message(:create)
   end
 
-  defp broadcast_message({:ok, new_message}) do
-    GatherWeb.Endpoint.broadcast!(
-      "conversation_#{new_message.conversation_id}",
-      "new_message",
-      new_message
-    )
-
-    {:ok, new_message}
+  defp broadcast_message({:ok, message}, action) do
+    topic = "conversation_#{message.conversation_id}"
+    event = to_string(action)
+    Endpoint.broadcast!(topic, event, message)
+    {:ok, message}
   end
 
-  defp broadcast_message(error), do: error
+  defp broadcast_message(error, _action), do: error
 
   @doc """
   Updates a message.
@@ -194,6 +218,8 @@ defmodule Gather.Chat do
     message
     |> Message.changeset(attrs)
     |> Repo.update()
+    |> with_author()
+    |> broadcast_message(:update)
   end
 
   @doc """
@@ -209,7 +235,9 @@ defmodule Gather.Chat do
 
   """
   def delete_message(%Message{} = message) do
-    Repo.delete(message)
+    message
+    |> Repo.delete()
+    |> broadcast_message(:delete)
   end
 
   @doc """

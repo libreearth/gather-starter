@@ -2,6 +2,7 @@ defmodule GatherWeb.ConversationLive.Show do
   use GatherWeb, :live_view
 
   alias Gather.{Accounts, Chat}
+  alias Chat.{Conversation, Message}
   alias GatherWeb.Endpoint
 
   @impl true
@@ -41,9 +42,14 @@ defmodule GatherWeb.ConversationLive.Show do
   end
 
   @impl true
-  def handle_info(%{event: "new_message", payload: new_message}, socket) do
+  def handle_info(%{event: "create", payload: %Message{} = new_message}, socket) do
     updated_messages = socket.assigns.messages ++ [new_message]
     {:noreply, assign(socket, :messages, updated_messages)}
+  end
+
+  def handle_info(%{event: "update", payload: %Conversation{} = conversation}, socket) do
+    IO.inspect("update!")
+    {:noreply, assign(socket, :conversation, conversation)}
   end
 
   defp page_title(:show), do: "Show Conversation"
