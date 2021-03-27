@@ -50,7 +50,8 @@
       <% end %>
       </div>
       <%= f = form_for :message, "#", [phx_submit: "send_message", class: "w-full flex justify-between bg-gray-100"] %>
-        <%= text_input f, :content, class: "flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none" %>
+        <%= text_input f, :content, onfocus: "if(this.value !== '') {this.value=''}",
+                       class: "flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none" %>
         <%= submit class: "" do %>
           <svg
             class="svg-inline--fa text-gray-600 fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2"
