@@ -19,28 +19,13 @@
         <% end %>
       </div>
       <div class="card-body prose max-w-full">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Title</th>
-
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="conversations">
 <%= for conversation <- @conversations do %>
-            <tr id="conversation-<%= conversation.id %>">
-              <td><%= conversation.title %></td>
-
-              <td class="text-right">
-                <span><%= live_redirect "Show", to: Routes.conversation_show_path(@socket, :show, conversation) %></span>
-                <span><%= live_patch "Edit", to: Routes.conversation_index_path(@socket, :edit, conversation) %></span>
-                <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: conversation.id, data: [confirm: "Are you sure?"] %></span>
-              </td>
-            </tr>
+        <div data-conversation-id="<%= conversation.id %>" class="flex">
+          <%= live_redirect conversation.title, to: Routes.conversation_show_path(@socket, :show, conversation), class: "flex-grow hover:underline" %>
+          <%= live_patch "Edit", to: Routes.conversation_index_path(@socket, :edit, conversation), class: "btn btn-sm btn-link" %>
+          <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: conversation.id, data: [confirm: "Are you sure?"], class: "btn btn-sm btn-link" %>
+        </div>
 <% end %>
-          </tbody>
-        </table>
       </div>
     </div>
   </div>

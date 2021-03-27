@@ -69,7 +69,12 @@ defmodule GatherWeb.ConversationLiveTest do
         |> log_in_user(user)
         |> live(Routes.conversation_index_path(conn, :index))
 
-      assert index_live |> element("#conversation-#{conversation.id} a", "Edit") |> render_click() =~
+      assert index_live
+             |> element(
+               "[data-conversation-id=#{conversation.id}] a[data-phx-link=patch]",
+               "Edit"
+             )
+             |> render_click() =~
                "Edit Conversation"
 
       assert_patch(index_live, Routes.conversation_index_path(conn, :edit, conversation))
@@ -95,7 +100,7 @@ defmodule GatherWeb.ConversationLiveTest do
         |> live(Routes.conversation_index_path(conn, :index))
 
       assert index_live
-             |> element("#conversation-#{conversation.id} a", "Delete")
+             |> element("[data-conversation-id=#{conversation.id}] a[phx-click=delete]", "Delete")
              |> render_click()
 
       refute has_element?(index_live, "#conversation-#{conversation.id}")
