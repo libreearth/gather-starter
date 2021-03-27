@@ -40,7 +40,8 @@
           </svg>
         <% end %>
       </div>
-      <div class="mt-20 mb-16">
+      <div id="chat-messages" phx-hook="ScrollToBottom"
+           class="pt-20 mb-2 max-h-96 overflow-y-auto">
       <%= for message <- @messages do %>
         <div class="clear-both">
           <div class="bg-gray-200 w-3/4 mx-4 my-2 p-2 rounded-lg <%= if message.user_id == @current_user.id, do: "float-right bg-gray-600 text-white" %>">
@@ -52,7 +53,7 @@
       <%= f = form_for :message, "#", [phx_submit: "send_message", class: "w-full flex justify-between bg-gray-100"] %>
         <%= text_input f, :content, onfocus: "if(this.value !== '') {this.value=''}",
                        class: "flex-grow m-2 py-2 px-4 mr-1 rounded-full border border-gray-300 bg-gray-200 resize-none" %>
-        <%= submit class: "" do %>
+        <%= submit do %>
           <svg
             class="svg-inline--fa text-gray-600 fa-paper-plane fa-w-16 w-12 h-12 py-2 mr-2"
             aria-hidden="true"

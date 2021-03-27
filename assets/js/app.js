@@ -21,6 +21,18 @@ import {InitToast} from "./init_toast.js"
 let Hooks = {}
 Hooks.InitToast = InitToast
 
+Hooks.ScrollToBottom = {
+  _doScroll() {
+    this.el.scrollTo(0, 10000000000)
+  },
+  mounted() {
+    this._doScroll()
+  },
+  updated() {
+    this._doScroll()
+  }
+}
+
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
   hooks: Hooks,
